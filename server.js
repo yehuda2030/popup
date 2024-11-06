@@ -1,25 +1,17 @@
 const express = require('express');
-const cors = require('cors'); // ייבוא מודול CORS
+const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 3000;
 
-// הגדרת אפשרויות CORS
-const corsOptions = {
-  origin: 'chrome-extension://dpfkmiaklhejajondhjnfcmmdnplodom', // המקור של תוסף כרום
-  methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type'],
-  credentials: true
-};
+// הגדרת CORS לאפשר גישה לכל המקורות (למטרות בדיקה)
+app.use(cors());
 
-app.use(cors(corsOptions));
-
-// טיפול בבקשת OPTIONS באופן מפורש לנתיב /webhook
+// טיפול מפורש בבקשות OPTIONS לנתיב /webhook
 app.options('/webhook', (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', 'chrome-extension://dpfkmiaklhejajondhjnfcmmdnplodom');
+  res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.sendStatus(204); // מחזיר תשובה תקינה לבקשת OPTIONS
+  res.sendStatus(204);
 });
 
 app.use(express.json());

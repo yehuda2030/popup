@@ -4,13 +4,18 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // שימוש ב-CORS כדי לאפשר גישה לכל המקורות
-app.use(cors());
+const corsOptions = {
+  origin: 'chrome-extension://dpfkmiaklhejajondhjnfcmmdnplodom', // הגדר את המקור של תוסף כרום
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type'],
+  credentials: true
+};
+app.use(cors(corsOptions));
 
-// Middleware לקריאת JSON מהבקשות הנכנסות
+// טיפול בבקשות OPTIONS במפורש
+app.options('/webhook', cors(corsOptions));
+
 app.use(express.json());
-
-// טיפול בבקשת OPTIONS עבור כל הנתיבים
-app.options('*', cors());
 
 // Endpoint לקבלת וובהוק מ-MAKE
 app.post('/webhook', (req, res) => {

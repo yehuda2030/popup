@@ -1,32 +1,34 @@
 const express = require('express');
-const cors = require('cors');
+const http = require('http');
+const WebSocket = require('ws');
 const app = express();
 const port = process.env.PORT || 3000;
 
-const corsOptions = {
-  origin: '*',
-  methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type']
-};
+const server = http.createServer(app);
+const wss = new WebSocket.Server({ server });
 
-app.use(cors(corsOptions));
 app.use(express.json());
 
-// פונקציה לבדיקת קיום ה-ID
-function checkIfIDExists(userID) {
-  return userID === "12345"; // ערך לדוגמה, שנה לפי הצורך
-}
-
-// נתיב לקבלת Webhook
-app.post('/webhook', (req, res) => {
-  const { userID } = req.body;
-  if (checkIfIDExists(userID)) {
-    res.send(`FOUND ID ${userID}`);
-  } else {
-    res.send(`ID NOT FOUND`);
-  }
+// מאגר מחוברים לשידור הודעות לכולם
+wss.on('connection', ws => {
+  console.log('Client connected');
+  ws.on('close', () => console.log('Client disconnected'));
 });
 
-app.listen(port, () => {
+// ניהול בקשת Webhook מ-MAKE
+app.post('/webhook', (req, res) => {
+  const { userID, customerName, phoneNumber } = req.body;
+
+  // שליחת הודעה לכל מחובר
+  wss.clients.forEach(client => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify({ userID, customerName, phoneNumber }));
+    }
+  });
+
+  res.status(200).send('Notification sent to all clients');
+});
+
+server.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });

@@ -3,26 +3,19 @@ const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 3000;
 
-// הגדרת אפשרויות CORS
 const corsOptions = {
-  origin: '*', // תוכל לצמצם לדומיין הספציפי של תוסף הכרום אם נדרש
+  origin: 'chrome-extension://dpfkmiaklhejajondhjnfcmmdnplodom', // הגדר את המקור של תוסף הכרום
   methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: ['Content-Type'],
   credentials: true
 };
 
 app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // לטיפול בכל בקשות ה-OPTIONS
+
 app.use(express.json());
 
-// טיפול בבקשת OPTIONS לנתיב /webhook
-app.options('/webhook', (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  res.sendStatus(204);
-});
-
-// Endpoint לקבלת ה-Webhook
+// Route to handle incoming webhooks
 app.post('/webhook', (req, res) => {
   const { userID, customerName, phoneNumber } = req.body;
   console.log(`Received webhook for userID ${userID}: ${customerName}, ${phoneNumber}`);

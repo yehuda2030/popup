@@ -1,20 +1,20 @@
 {
   "name": "webhook-server",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "",
+  "main": "server.js",  // ודא ש-server.js הוא שם הקובץ הראשי, ואם לא, שנה בהתאם
   "scripts": {
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^4.21.1"
+    "express": "^4.21.1",
+    "cors": "^2.8.5"
   },
-  "dependencies": {
-  "express": "^4.17.1",
-  "cors": "^2.8.5"
-}
+  "engines": {
+    "node": "16.x"
+  }
 }

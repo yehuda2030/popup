@@ -17,9 +17,15 @@ app.use(express.json());
 
 // Route to handle incoming webhooks
 app.post('/webhook', (req, res) => {
-  const { userID, customerName, phoneNumber } = req.body;
-  console.log(`Received webhook for userID ${userID}: ${customerName}, ${phoneNumber}`);
-  res.status(200).send('Webhook received');
+  const { userID } = req.body;
+  // בדוק אם ה-ID קיים במערכת
+  const isIDFound = checkIfIDExists(userID); // פונקציה לדוגמה לבדיקת ID
+
+  if (isIDFound) {
+    res.send(`FOUND ID ${userID}`);
+  } else {
+    res.send(`ID NOT FOUND`);
+  }
 });
 
 app.listen(port, () => {

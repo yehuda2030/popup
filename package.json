@@ -2,7 +2,7 @@
   "name": "webhook-server",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",  // ודא ש-server.js הוא שם הקובץ הראשי, ואם לא, שנה בהתאם
+  "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
